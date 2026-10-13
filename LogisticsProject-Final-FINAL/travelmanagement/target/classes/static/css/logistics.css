@@ -1,0 +1,102 @@
+
+        :root {
+            --blue: #195dcc;
+            --navy: #142d50;
+            --text: #273b53;
+            --muted: #66768b;
+            --line: #dce5ef;
+        }
+        * { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background: #f3f6fb;
+            line-height: 1.6;
+        }
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            padding: 18px max(24px, calc((100% - 1180px) / 2));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        .brand { color: var(--navy); font-size: 21px; font-weight: 800; text-decoration: none; }
+        .brand span { color: var(--blue); }
+        .topbar nav { display: flex; gap: 8px; flex-wrap: wrap; }
+        .topbar nav a { padding: 9px 15px; border-radius: 8px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; }
+        .topbar nav a:hover, .topbar nav a[aria-current="page"] { background: #eaf1ff; color: var(--blue); }
+        .container { max-width: 1228px; padding: 32px 24px 64px; margin: auto; }
+        .hero { padding: 32px; background: linear-gradient(115deg, #15365c, #195dcc); color: #fff; border-radius: 16px; margin-bottom: 32px; }
+        .eyebrow { margin: 0 0 8px; color: #c7dbff; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-size: clamp(25px, 3.5vw, 36px); line-height: 1.2; letter-spacing: -0.7px; margin: 0 0 12px; }
+        .hero p:last-child { margin: 0; max-width: 700px; color: #e2edff; }
+        h2 { margin: 30px 0 16px; font-size: 22px; color: var(--navy); letter-spacing: -0.4px; scroll-margin-top: 20px; }
+        h3 { margin: 24px 0 12px; font-size: 17px; color: var(--navy); }
+        p { color: var(--muted); }
+        form {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            align-items: end;
+            margin-bottom: 24px;
+            box-shadow: 0 3px 12px #142d5005;
+        }
+        form br { display: none; }
+        label { display: flex; flex-direction: column; gap: 7px; font-size: 13px; font-weight: 650; color: #40536b; min-width: 0; }
+        input, select {
+            width: 100%; min-width: 0; height: 46px; padding: 10px 12px;
+            border: 1px solid #cdd8e5; border-radius: 7px;
+            background: #fff; color: var(--text); font: inherit; font-size: 14px;
+        }
+        .field label { margin-bottom: 7px; }
+        input::placeholder { color: #8a98a9; }
+        input:focus, select:focus { outline: 3px solid #cddfff; border-color: var(--blue); }
+        button {
+            border: 1px solid transparent; border-radius: 7px; padding: 12px 20px;
+            background: var(--blue); color: #fff; font: inherit; font-size: 14px;
+            font-weight: 650; cursor: pointer; min-height: 44px;
+            transition: background 150ms, box-shadow 150ms;
+        }
+        button:hover:not(:disabled) { background: #124ba8; box-shadow: 0 3px 8px #195dcc26; }
+        button:focus-visible, a:focus-visible { outline: 3px solid #80afff; outline-offset: 3px; }
+        button:disabled { background: #e5ebf3; color: #778598; cursor: not-allowed; }
+        form > button { justify-self: start; }
+        .table-wrap { overflow-x: auto; background: #fff; border: 1px solid var(--line); border-radius: 12px; margin: 16px 0; }
+        table { width: 100%; border-collapse: collapse; border: 0; font-size: 14px; }
+        th { background: #eaf0f9; color: #435b7b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; text-align: left; white-space: nowrap; }
+        th, td { padding: 16px; border: 0; border-bottom: 1px solid #e8edf4; vertical-align: middle; }
+        tr:last-child td { border-bottom: 0; }
+        td:first-child { font-weight: 650; color: var(--navy); }
+        tr:hover td { background: #f8fbff; }
+        td button { padding: 8px 13px; min-height: 36px; white-space: nowrap; font-size: 12px; }
+        .notice, #message:not(:empty) { padding: 14px 18px; border: 1px solid #bed3f3; background: #eaf2ff; color: #234f8c; border-radius: 9px; }
+        .error { padding: 14px 18px; border: 1px solid #efbec5; background: #fff0f2; color: #a1293b; border-radius: 9px; }
+        .jump-links { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 28px; }
+        .jump-links a { padding: 8px 14px; background: #fff; border: 1px solid var(--line); border-radius: 7px; color: #40536b; text-decoration: none; font-size: 13px; }
+        .jump-links a:hover { color: var(--blue); border-color: #98b6e6; }
+        hr { border: 0; border-top: 1px solid var(--line); margin: 36px 0; }
+        .footer { font-size: 12px; color: #8290a2; border-top: 1px solid var(--line); margin-top: 40px; padding-top: 18px; }
+        @media (max-width: 850px) { form { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 560px) {
+            .topbar { align-items: flex-start; flex-direction: column; padding: 16px; gap: 10px; }
+            .topbar nav a { padding: 7px 10px; }
+            .container { padding: 20px 16px 40px; }
+            .hero { padding: 24px; }
+            form { grid-template-columns: 1fr; padding: 20px; gap: 16px; }
+            form > button { width: 100%; }
+            th, td { padding: 12px; }
+            .table-wrap table { min-width: 600px; }
+        }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } button { transition: none; } }
+    
+        .jump-links a[aria-current="page"] { background: #eaf1ff; color: var(--blue); border-color: #98b6e6; }
+        .page-next { display: inline-block; margin-top: 24px; color: var(--blue); font-weight: 650; }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Departure Costs | Travel Logistics</title><link rel="stylesheet" href="/css/logistics.css"></head>
+<body><header class="topbar"><a class="brand" href="/logistics">Dahamdi <span>Tours</span></a><nav aria-label="Main navigation"><a href="/logistics" aria-current="page">Travel Logistics</a></nav></header>
+<main class="container"><section class="hero"><p class="eyebrow">Travel operations</p><h1>Travel Logistics &amp; Supplier Management</h1><p>Manage suppliers, hotel bookings, transport, and guide and driver assignments for each trip.</p></section>
+<nav class="jump-links" aria-label="Logistics pages"><a href="/logistics/departures">Departures</a>
+<a href="/logistics/suppliers">Suppliers</a>
+<a href="/logistics/hotels">Hotels</a>
+<a href="/logistics/transports">Transport</a>
+<a href="/logistics/guides">Guides &amp; Drivers</a>
+<a href="/logistics/assignments">Assignments</a>
+<a href="/logistics/payments">Payments</a>
+<a href="/logistics/costs" aria-current="page">Departure Costs</a></nav>
+<p class="notice" th:if="${notice}" th:text="${notice}"></p><p class="error" th:if="${error}" th:text="${error}" role="alert"></p>
+<h2 id="costs">Departure Costs</h2>
+<div class="table-wrap">
+<table>
+    <tr><th>Departure</th><th>Supplier Cost (LKR)</th><th>Paid (LKR)</th><th>Outstanding (LKR)</th></tr>
+    <tr th:each="departure : ${departures}">
+        <td th:text="${departure.reference + ' / ' + departure.destination + ' / ' + departure.startDate}"></td>
+        <td th:text="${costs[departure.id]}"></td>
+        <td th:text="${paid[departure.id]}"></td>
+        <td th:text="${costs[departure.id].subtract(paid[departure.id])}"></td>
+    </tr>
+</table>
+</div>
+<p th:if="${#lists.isEmpty(departures)}">Add a trip on the Departures page first.</p>
+<a class="page-next" href="/logistics/departures">Continue to Departures →</a>
+<footer class="footer">Dahamdi Tours · Travel Logistics and Supplier Management</footer></main></body></html>

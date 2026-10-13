@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Departures | Travel Logistics</title><link rel="stylesheet" href="/css/logistics.css"><style>
+.record-action { display:inline-block; padding:8px 14px; border-radius:6px; background:#124ba8; color:#fff; text-decoration:none; }
+.record-action:hover, .record-action:focus-visible, button:hover { background:#0b3477; color:#fff; }
+#recordForm .invalid-field { border:2px solid #c62828; background:#fff5f5; outline:3px solid #ffcdd2; }
+</style><style>
+[hidden] { display: none !important; }
+.delete-toolbar { display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:10px; margin:18px 0 10px; }
+#deleteActions { display:inline-flex; gap:10px; }
+#startDelete, #deleteSelected { background:#b42318; color:#fff; border-color:#b42318; }
+#startDelete:hover, #deleteSelected:hover:not(:disabled) { background:#8f1c13; color:#fff; }
+#cancelDelete:hover { background:#124ba8; color:#fff; }
+#deleteSelected:disabled { opacity:.5; cursor:not-allowed; }
+.delete-column { width:54px; text-align:center; }
+.delete-column input.delete-check { width:18px; height:18px; margin:0; padding:0; accent-color:#b42318; cursor:pointer; }
+</style><style>
+/* Keep deletion controls above a full-width list. */
+#deleteRecordsForm {
+    display: block;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    margin: 0 0 24px;
+    box-shadow: none;
+    width: 100%;
+    min-width: 0;
+}
+#deleteRecordsForm .delete-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    margin: 16px 0 10px;
+}
+#deleteRecordsForm .table-wrap {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 12px 0 16px;
+}
+#deleteRecordsForm table { width: 100%; }
+#deleteRecordsForm #deleteHelp { margin: 8px 0 12px; font-size: 13px; }
+</style></head>
+<body><header class="topbar"><a class="brand" href="/logistics">Dahamdi <span>Tours</span></a><nav aria-label="Main navigation"><a href="/logistics" aria-current="page">Travel Logistics</a></nav></header>
+<main class="container"><section class="hero"><p class="eyebrow">Travel operations</p><h1>Travel Logistics &amp; Supplier Management</h1><p>Manage suppliers, hotel bookings, transport, and guide and driver assignments for each trip.</p></section>
+<nav class="jump-links" aria-label="Logistics pages"><a href="/logistics/departures" aria-current="page">Departures</a>
+<a href="/logistics/suppliers">Suppliers</a>
+<a href="/logistics/hotels">Hotels</a>
+<a href="/logistics/transports">Transport</a>
+<a href="/logistics/guides">Guides &amp; Drivers</a>
+<a href="/logistics/assignments">Assignments</a>
+<a href="/logistics/payments">Payments</a>
+<a href="/logistics/costs">Departure Costs</a></nav>
+<p class="notice" th:if="${notice}" th:text="${notice}"></p><p class="error" th:if="${error}" th:text="${error}" role="alert"></p>
+<h2 th:text="${editing != null ? 'Edit Record' : 'Add Trip Departure'}">Add Trip Departure</h2>
+<p>Create the trip that your company will arrange services for.</p>
+<form method="post" action="/logistics/departures" th:action="${editing != null ? '/logistics/departures/' + editing.id + '/edit' : '/logistics/departures'}" id="recordForm">
+<label>Reference: <input name="reference" required maxlength="20" placeholder="Trip-001" th:value="${editing != null ? editing.reference : ''}"></label>
+<label>Package name: <input name="packageName" required maxlength="100" placeholder="" th:value="${editing != null ? editing.packageName : ''}"></label>
+<label>Destination: <input name="destination" required maxlength="100" th:value="${editing != null ? editing.destination : ''}"></label>
+    <label>Departure date:
+        <input type="date" name="startDate" required th:value="${editing != null ? editing.startDate : ''}">
+    </label>
+
+    <label>Return date:
+        <input type="date" name="endDate" required th:value="${editing != null ? editing.endDate : ''}">
+    </label>
+
+<button type="submit" th:text="${editing != null ? 'Update Record' : 'Save Departure'}">Save Departure</button><a class="record-action" th:if="${editing != null}" href="/logistics/departures">Cancel</a></form>
+<h3>Trip Departures</h3><form id="deleteRecordsForm" method="post" action="/logistics/departures/delete">
+    <div class="delete-toolbar">
+        <button id="startDelete" type="button" aria-expanded="false" aria-controls="deleteActions">Delete records</button>
+        <span id="deleteActions" hidden>
+            <button id="deleteSelected" type="submit" disabled>Delete selected (0)</button>
+            <button id="cancelDelete" type="button">Cancel</button>
+        </span>
+    </div>
+    <p id="deleteHelp" hidden>Select the checkboxes on the left, then click Delete selected. This permanently removes the selected records.</p>
+<div class="table-wrap"><table>
+<tr><th class="delete-column" hidden scope="col">Select</th><th>Reference</th><th>Package</th><th>Destination</th><th>Departure</th><th>Return</th><th>Actions</th></tr>
+<tr th:each="departure : ${departures}"><td class="delete-column" hidden><input class="delete-check" type="checkbox" name="ids" th:value="${departure.id}" aria-label="Select record for deletion" disabled></td><td th:text="${departure.reference}"></td><td th:text="${departure.packageName}"></td><td th:text="${departure.destination}"></td><td th:text="${departure.startDate}"></td><td th:text="${departure.endDate}"></td><td><a class="record-action" th:href="@{/logistics/departures/{id}/edit(id=${departure.id})}">Edit</a></td></tr>
+</table></div>
+</form><p th:if="${#lists.isEmpty(departures)}">No departures yet. Add your first trip above.</p>
+<a class="page-next" href="/logistics/suppliers">Continue to Suppliers →</a>
+<footer class="footer">Dahamdi Tours · Travel Logistics and Supplier Management</footer></main><script>
+(() => {
+ const form = document.getElementById('recordForm');
+ form.addEventListener('invalid', event => event.target.classList.add('invalid-field'), true);
+ const clear = event => { if (event.target.validity && event.target.validity.valid) event.target.classList.remove('invalid-field'); };
+ form.addEventListener('input', clear); form.addEventListener('change', clear);
+})();
+</script><script>
+(() => {
+    const form = document.getElementById('deleteRecordsForm');
+    const start = document.getElementById('startDelete');
+    const actions = document.getElementById('deleteActions');
+    const submit = document.getElementById('deleteSelected');
+    const help = document.getElementById('deleteHelp');
+    const checks = Array.from(form.querySelectorAll('.delete-check'));
+    const columns = form.querySelectorAll('.delete-column');
+    let selecting = false;
+    function updateCount() {
+        const count = checks.filter(check => check.checked).length;
+        submit.textContent = 'Delete selected (' + count + ')';
+        submit.disabled = count === 0;
+    }
+    function setSelecting(active) {
+        selecting = active;
+        columns.forEach(column => { column.hidden = !active; });
+        checks.forEach(check => { check.checked = false; check.disabled = !active; });
+        actions.hidden = !active;
+        help.hidden = !active;
+        start.hidden = active;
+        start.setAttribute('aria-expanded', String(active));
+        updateCount();
+    }
+    start.addEventListener('click', () => {
+        setSelecting(true);
+        const first = checks.find(check => !check.closest('tr').hidden);
+        if (first) first.focus();
+    });
+    document.getElementById('cancelDelete').addEventListener('click', () => {
+        setSelecting(false); start.focus();
+    });
+    checks.forEach(check => check.addEventListener('change', updateCount));
+    // Changing supplier filters clears the selection so hidden rows are never accidentally removed.
+    document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
+        checks.forEach(check => { check.checked = false; }); updateCount();
+    }));
+    form.addEventListener('submit', event => {
+        const count = checks.filter(check => check.checked).length;
+        if (!selecting || count === 0 || !window.confirm('Permanently delete ' + count + ' selected record(s)? This cannot be undone.'))
+            event.preventDefault();
+    });
+    setSelecting(false);
+})();
+</script></body>
+</html>
